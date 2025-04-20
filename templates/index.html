@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MoodTunes 🎧</title>
+</head>
+<body>
+    <h2>How are you feeling today?</h2>
+    <form id="moodForm">
+        <textarea name="text" rows="4" cols="50" placeholder="Type your mood..."></textarea><br><br>
+        <button type="submit">Get Music</button>
+    </form>
+
+    <div id="results" style="margin-top: 20px;"></div>
+
+    <script>
+        document.getElementById("moodForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch("/get_mood", {
+                method: "POST",
+                body: formData
+            });
+            const data = await response.json();
+            document.getElementById("results").innerHTML = `
+                <h3>Mood Detected: ${data.sentiment}</h3>
+                <p>Suggested Music:</p>
+                <ul>${data.suggestions.map(song => `<li>${song}</li>`).join("")}</ul>
+            `;
+        });
+    </script>
+</body>
+</html>
+
